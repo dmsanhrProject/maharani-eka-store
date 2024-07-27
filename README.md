@@ -1,5 +1,7 @@
 # Maharani Eka Store
 
+First of all, Install all Dependencies:
+
 ### `yarn install`
 
 ## Run

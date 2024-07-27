@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { getDatabase, ref, set, remove, update, push, onValue } from 'firebase/database';
-import { Modal, Button, Table, Form, Offcanvas } from 'react-bootstrap';
-import app, { db } from '../../utils/firebaseConfig';
+import { ref, set, remove, update, push, onValue } from 'firebase/database';
+import { Button, Table, Form, Offcanvas } from 'react-bootstrap';
+import { db } from '../../utils/firebaseConfig';
 import axios from 'axios'; // For HTTP requests to Cloudinary
 
 const ManageItems = () => {

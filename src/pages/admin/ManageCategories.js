@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getDatabase, ref, set, remove, update, onValue, push } from 'firebase/database';
+import { ref, set, remove, update, onValue, push } from 'firebase/database';
 import { Button, Table, Form } from 'react-bootstrap';
 import { db } from '../../utils/firebaseConfig';
 

@@ -10,11 +10,11 @@ const Login = () => {
   const { setIsAuthenticated } = useAuth();
 
   // 123
-  const encryptedPassword = 'U2FsdGVkX18bbTS4CgJzutvdDN7ogWQGuu4KrDxgnZo=';
+  const encryptedPassword = 'U2FsdGVkX1+359QcjSx28xybmS2iHNDsboEQpI0C1Mc=';
 
   // AdminMHS#5678
   // const encryptedPassword = 'U2FsdGVkX1/ndNr5+XMzkUpgpMJbsyHlufhQUwcgHpE=';
-  const secretKey = 'MHSsuperS3cretP4s$to#pen';
+  const secretKey = process.env.REACT_APP_SECRET_KEY;
 
   const handleLogin = (e) => {
     e.preventDefault();
@@ -25,7 +25,7 @@ const Login = () => {
       navigate('/admin');
     } else {
       alert('Password salah');
-      const ssk = 'MHSsuperS3cretP4s$to#pen';
+      const ssk = secretKey;
       const pass = '123';
       
       const encPass = CryptoJS.AES.encrypt(pass, ssk).toString();

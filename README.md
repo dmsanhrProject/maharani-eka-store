@@ -1,9 +1,9 @@
 # Maharani Eka Store
 
-### `npm start`
+### `yarn install`
 
 ## Run
 
 In the project directory, you can run:
 
-### `npm start`
+### `yarn start`

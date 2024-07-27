@@ -12,6 +12,7 @@ import ManageCategories from './pages/admin/ManageCategories';
 import ManageBrands from './pages/admin/ManageBrands';
 import ManageItems from './pages/admin/ManageItems';
 import Login from './pages/Login';
+import ScrollToTop from './components/ScrollToTop';
 import ProtectedRoute from './utils/ProtectedRoute';
 import { AuthProvider } from './utils/AuthContext';
 
@@ -31,6 +32,7 @@ const App = () => {
   return (
     <AuthProvider>
       <Router>
+        <ScrollToTop />
         <Layout>
           <Routes>
             <Route path="/" element={<Home />} />

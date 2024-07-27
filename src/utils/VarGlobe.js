@@ -1,0 +1,1 @@
+export const WA_NUMBER = '628883734052';

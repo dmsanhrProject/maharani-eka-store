@@ -1,0 +1,239 @@
+.btn-red, .btn-red:active{
+    background-color: #f52133;
+    border-color: #f52133;
+}
+
+.btn-red:hover{
+    background-color: #be0d24!important;
+    border-color: #be0d24!important;
+}
+
+.btn-outline-red, .btn-outline-red:active{
+    background-color: #ffffff;
+    border-color: #f52133;
+    color: #f52133;
+}
+
+.btn-outline-red:hover{
+    background-color: #ffaeb847;
+    border-color: #f52133;
+    color: #f52133;
+}
+
+.btn-outline-red-ts, .btn-outline-red-ts:active{
+    background-color: #ffffff00;
+    border-color: #f52133;
+    color: #f52133;
+}
+
+.btn-outline-red-ts:hover{
+    background-color: #ffaeb847!important;
+    border-color: #f52133!important;
+    color: #f52133!important;
+}
+
+.btn-shopee, .btn-shopee:active{
+    background-color: #fa5230;
+    border-color: #fa5230;
+    color: #ffffff;
+}
+
+.btn-shopee:hover{
+    background-color: #f14523!important;
+    border-color: #f14523!important;
+    color: #ffffff!important;
+}
+
+.btn-tiktok, .btn-tiktok:active{
+    background-color: #212121;
+    border-color: #212121;
+    color: #ffffff;
+}
+
+.btn-tiktok:hover{
+    background-color: #111316!important;
+    border-color: #111316!important;
+    color: #ffffff!important;
+}
+
+.btn-whatsapp, .btn-whatsapp:active{
+    background-color: #25d366;
+    border-color: #25d366;
+    color: #ffffff;
+}
+
+.btn-whatsapp:hover{
+    background-color: #20c45c!important;
+    border-color: #20c45c!important;
+    color: #ffffff!important;
+}
+
+.text-red{
+    color: #f52133;
+}
+
+.bg-red{
+    /* background-color: #c70011; */
+    background-color: #f52133;
+}
+
+.bg-wa{
+    background-color: #16c557;
+}
+
+.bg-ig{
+    background: -moz-linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); 
+background: -webkit-linear-gradient(45deg, #f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%); 
+background: linear-gradient(45deg, #f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%); 
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f09433', endColorstr='#bc1888',GradientType=1 );
+}
+
+.bg-shopee{
+    background-color: #ff5200;
+}
+
+.bg-tiktok{
+    background-color: #212121;
+}
+
+.border-red{
+  border-color: #f52133!important;
+}
+
+.ratio-1{
+    aspect-ratio: 1/1;
+}
+
+.flex-center{
+    justify-content: center;
+    align-items: center;
+}
+
+.main-hero{
+    height: calc(100vh - 120px);
+}
+
+.accordion-item-filter{
+    border-bottom: 1px solid #dee2e6;
+    border-top: none;
+    border-right: none;
+    border-left: none;
+}
+
+.accordion-item.accordion-item-filter .accordion-body{
+    padding-top: 0;
+}
+
+
+.accordion-item.accordion-item-filter .accordion-button{
+    border-radius: 0;
+    box-shadow: none;
+    background-color: #ffffff;
+    font-weight: 500;
+}
+
+.accordion-item.accordion-item-filter .accordion-body .form-check{
+    margin-bottom: 10px;
+}
+
+.accordion-item.accordion-item-filter .accordion-body .form-check input{
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+    box-shadow: none;
+}
+
+.accordion-item.accordion-item-filter .accordion-body .form-check input:checked{
+    background-color: #f52133;
+    border-color: #f52133;
+}
+
+.accordion-item.accordion-item-filter .accordion-body .form-check label{
+    font-size: 16px;
+}
+
+.shop-page .item-card img{
+    aspect-ratio: 1;
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+}
+
+.shop-page .item-card .card-body{
+    padding: 4px 8px 16px 8px;
+}
+
+.shop-page .item-card .h5{
+    margin-bottom: 0;
+}
+
+.shop-page .item-card .card-title-brand{
+    font-size: 14px;
+}
+
+.shop-page .item-card .card-title-name{
+    margin-bottom: 4px;
+    font-size: 12px;
+}
+
+.shop-page .item-card .card-title-price{
+    font-size: 16px;
+}
+
+.shop-page .dropdown-sort button, .dropdown-sort button:hover, .dropdown-sort button:focus {
+    font-size: 14px;
+    color: #f52133;
+    background: none!important;
+    border: none;
+}
+
+.shop-page .dropdown-sort button::after{
+    display: none!important;
+}
+
+.product-show-home .item-card:last-child{
+    display: block;
+}
+
+.contact-page *{
+    text-decoration: none;
+}
+
+footer img{
+    width: 30%;
+}
+
+footer h5{
+    font-size: 18px;
+}
+
+footer a{
+    display: block;
+    outline: none;
+    color: white;
+    margin-top: 18px;
+}
+
+footer a:hover{
+    text-decoration: none;
+    color: #FFC600;
+}
+
+@media screen and (min-width: 768px){
+    .main-hero{
+        height: unset;
+    }
+    .product-show-home .item-card:last-child{
+        display: none;
+    }
+    .shop-page .item-card .card-title-brand{
+        font-size: 20px;
+    }
+    .shop-page .item-card .card-title-name{
+        font-size: 16px;
+    }
+    .col-md-25{
+        flex: 0 0 auto;
+        width: 20%;
+    }
+}

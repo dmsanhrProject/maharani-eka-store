@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ref, set, remove, update, push, onValue } from 'firebase/database';
-import { Button, Table, Form, Offcanvas } from 'react-bootstrap';
+import { Row, Col, Button, ButtonGroup, Table, Form, Offcanvas, Card, Badge } from 'react-bootstrap';
 import { db } from '../../utils/firebaseConfig';
 import axios from 'axios'; // For HTTP requests to Cloudinary
 
@@ -25,6 +25,7 @@ const ManageItems = () => {
     images: []
   });
   const [imagePreviews, setImagePreviews] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
 
   function formatRupiah(number) {
     return number.toLocaleString('id-ID');
@@ -173,13 +174,25 @@ const ManageItems = () => {
     setShowEditModal(true);
   };
 
+  // Fungsi untuk menangani perubahan input pencarian
+  const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value.toLowerCase());
+  };
+
+  // Filter item berdasarkan nama atau brand
+  const filteredItems = items.filter(item => {
+    const brandName = brands.find(brand => brand.id === item.brand)?.name.toLowerCase() || '';
+    const itemName = item.name.toLowerCase();
+    return itemName.includes(searchTerm) || brandName.includes(searchTerm);
+  });
+
   return (
     <div className="container mt-4 admin-page">
       <h1>Manage Product</h1>
 
       <Button variant="primary" onClick={() => setShowAddModal(true)}>Add Product</Button>
 
-      <Table striped bordered hover className="mt-4">
+      {/* <Table striped bordered hover className="mt-4">
         <thead>
           <tr>
             <th>Name</th>
@@ -195,7 +208,6 @@ const ManageItems = () => {
           {items.map(item => (
             <tr key={item.id}>
               <td>{item.name}</td>
-              {/* <td>{item.price}</td> */}
               <td>Rp.{formatRupiah(parseInt(item.price))}</td>
               <td>{categories.find(cat => cat.id === item.category)?.name || 'N/A'}</td>
               <td>{brands.find(brand => brand.id === item.brand)?.name || 'N/A'}</td>
@@ -212,7 +224,54 @@ const ManageItems = () => {
             </tr>
           ))}
         </tbody>
-      </Table>
+      </Table> */}
+      <Row className="mt-4">
+        <Col className='col-12'>
+          <Form className="mb-4">
+            <Form.Group controlId="search">
+              <Form.Control
+                type="text"
+                placeholder="Cari nama atau brand"
+                value={searchTerm}
+                onChange={handleSearchChange}
+              />
+            </Form.Group>
+          </Form>
+        </Col>
+        {filteredItems.map(item => (
+          <Col sm={4} md={3} lg={2} key={item.id} className="mb-4 col-6">
+            <Card 
+              style={{ cursor: 'pointer',overflow:'hidden'}} 
+              onClick={() => handleShowDetail(item)}
+            >
+              <Badge bg={item.gender === 'Wanita' ? 'pink' : 'primary'} className='rounded-1' style={{marginBottom:"-21px",zIndex:'99',width:"fit-content"}}>
+                {item.gender === 'Wanita' ? 'W' : 'P'}
+              </Badge>
+              {item.images.length > 0 && (
+                <Card.Img 
+                  variant="top" 
+                  src={item.images[0]} 
+                  alt={item.name} 
+                  style={{ height: '150px', objectFit: 'cover' }}
+                />
+              )}
+              <Card.Body className="pt-1 px-2 px-sm-3 pb-2 pb-sm-3">
+                <Card.Title>
+                  {brands.find(brand => brand.id === item.brand)?.name || 'N/A'}
+                </Card.Title>
+                <Card.Subtitle className="pb-2 text-secondary text-truncate">{item.name}</Card.Subtitle>
+                <Card.Text>
+                  Rp.{formatRupiah(parseInt(item.price))}
+                </Card.Text>
+                <ButtonGroup size="sm" className='w-100' style={{zIndex:'99'}}>
+                  <Button variant="outline-warning" onClick={(e) => {e.stopPropagation(); startEditItem(item)}}>edit</Button>
+                  <Button variant="outline-danger" onClick={(e) => { e.stopPropagation(); handleDeleteItem(item.id); }}>hapus</Button>
+                </ButtonGroup>
+              </Card.Body>
+            </Card>
+          </Col>
+        ))}
+      </Row>
 
       {/* Add Product Modal */}
       <Offcanvas show={showAddModal} onHide={() => setShowAddModal(false)} placement='end' className='admin-canvas-add-items'>
@@ -222,7 +281,7 @@ const ManageItems = () => {
         <Offcanvas.Body>
           <Form>
             <Form.Group controlId="formItemName">
-              <Form.Label>Name</Form.Label>
+              <Form.Label className="mb-0 mt-2">Name</Form.Label>
               <Form.Control size="sm"
                 type="text"
                 value={newItem.name}
@@ -231,7 +290,7 @@ const ManageItems = () => {
               />
             </Form.Group>
             <Form.Group controlId="formItemPrice">
-              <Form.Label>Price</Form.Label>
+              <Form.Label className="mb-0 mt-2">Price</Form.Label>
               <Form.Control size="sm"
                 type="number"
                 value={newItem.price}
@@ -240,7 +299,7 @@ const ManageItems = () => {
               />
             </Form.Group>
             <Form.Group controlId="formItemDescription">
-              <Form.Label>Description</Form.Label>
+              <Form.Label className="mb-0 mt-2">Description</Form.Label>
               <Form.Control size="sm"
                 as="textarea"
                 value={newItem.description}
@@ -249,7 +308,7 @@ const ManageItems = () => {
               />
             </Form.Group>
             <Form.Group controlId="formItemTiktokLink">
-              <Form.Label>TikTok Link</Form.Label>
+              <Form.Label className="mb-0 mt-2">TikTok Link</Form.Label>
               <Form.Control size="sm"
                 type="text"
                 value={newItem.tiktokLink}
@@ -258,7 +317,7 @@ const ManageItems = () => {
               />
             </Form.Group>
             <Form.Group controlId="formItemShopeeLink">
-              <Form.Label>Shopee Link</Form.Label>
+              <Form.Label className="mb-0 mt-2">Shopee Link</Form.Label>
               <Form.Control size="sm"
                 type="text"
                 value={newItem.shopeeLink}
@@ -267,7 +326,7 @@ const ManageItems = () => {
               />
             </Form.Group>
             <Form.Group controlId="formItemCategory">
-              <Form.Label>Category</Form.Label>
+              <Form.Label className="mb-0 mt-2">Category</Form.Label>
               <Form.Control size="sm"
                 as="select"
                 value={newItem.category}
@@ -280,7 +339,7 @@ const ManageItems = () => {
               </Form.Control>
             </Form.Group>
             <Form.Group controlId="formItemBrand">
-              <Form.Label>Brand</Form.Label>
+              <Form.Label className="mb-0 mt-2">Brand</Form.Label>
               <Form.Control size="sm"
                 as="select"
                 value={newItem.brand}
@@ -293,7 +352,7 @@ const ManageItems = () => {
               </Form.Control>
             </Form.Group>
             <Form.Group controlId="formItemGender">
-              <Form.Label>Gender</Form.Label>
+              <Form.Label className="mb-0 mt-2">Gender</Form.Label>
               <Form.Control size="sm"
                 as="select"
                 value={newItem.gender}
@@ -305,7 +364,7 @@ const ManageItems = () => {
               </Form.Control>
             </Form.Group>
             <Form.Group controlId="formItemImages">
-              <Form.Label>Images</Form.Label>
+              <Form.Label className="mb-0 mt-2">Images</Form.Label>
               <Form.Control size="sm"
                 type="file"
                 multiple

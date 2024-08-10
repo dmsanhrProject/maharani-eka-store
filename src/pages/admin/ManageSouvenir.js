@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { db } from '../../utils/firebaseConfig';
 import { ref, onValue, push, update, remove } from 'firebase/database';
-import { Button, Offcanvas, Form, Container, Table } from 'react-bootstrap';
+import { Button, Offcanvas, Form, Container, Table, Spinner } from 'react-bootstrap';
 import axios from 'axios'; // For HTTP requests to Cloudinary
 
 const ManageSouvenir = () => {
@@ -9,6 +9,7 @@ const ManageSouvenir = () => {
   const [showOffcanvas, setShowOffcanvas] = useState(false);
   const [currentSouvenir, setCurrentSouvenir] = useState({ name: '', description: '', image: '' });
   const [isEdit, setIsEdit] = useState(false);
+  const [isLoading, setLoading] = useState(false);
 
   useEffect(() => {
     const souvenirsRef = ref(db, 'souvenirs/');
@@ -50,22 +51,45 @@ const ManageSouvenir = () => {
 
   const handleClose = () => setShowOffcanvas(false);
 
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+
+  //   if (currentSouvenir.image instanceof File) {
+  //     currentSouvenir.image = await uploadImageToCloudinary(currentSouvenir.image);
+  //   }
+
+  //   if (isEdit) {
+  //     const updates = {};
+  //     updates[`/souvenirs/${currentSouvenir.id}`] = currentSouvenir;
+  //     await update(ref(db), updates);
+  //   } else {
+  //     await push(ref(db, 'souvenirs/'), currentSouvenir);
+  //   }
+  //   handleClose();
+  // };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
 
-    if (currentSouvenir.image instanceof File) {
-      currentSouvenir.image = await uploadImageToCloudinary(currentSouvenir.image);
+    try {
+      if (currentSouvenir.image instanceof File) {
+        currentSouvenir.image = await uploadImageToCloudinary(currentSouvenir.image);
+      }
+
+      if (isEdit) {
+        const updates = {};
+        updates[`/souvenirs/${currentSouvenir.id}`] = currentSouvenir;
+        await update(ref(db), updates);
+      } else {
+        await push(ref(db, 'souvenirs/'), currentSouvenir);
+      }
+    } catch (error) {
+      alert('Error occurred:', error);
+    } finally {
+      setLoading(false);
+      handleClose();
     }
-
-    if (isEdit) {
-      const updates = {};
-      updates[`/souvenirs/${currentSouvenir.id}`] = currentSouvenir;
-      await update(ref(db), updates);
-    } else {
-      await push(ref(db, 'souvenirs/'), currentSouvenir);
-    }
-
-    handleClose();
   };
 
   const handleDelete = async (id) => {
@@ -78,6 +102,19 @@ const ManageSouvenir = () => {
 
   return (
     <Container>
+      <div className={`${isLoading ? 'd-flex' : 'd-none'} justify-content-center align-items-center`}
+        style={{
+          position:"absolute",
+          top:"0",
+          right:"0",
+          width:"100vw",
+          height:"100vh",
+          backgroundColor:"#00000054",
+          zIndex:"1042"
+        }}
+      >
+        <Spinner animation="border" />
+      </div>
       <h1 className="my-4">Admin Suvenir</h1>
       <Button variant="primary" onClick={() => handleShow()}>
         Tambah Suvenir
@@ -106,7 +143,7 @@ const ManageSouvenir = () => {
         </tbody>
       </Table>
 
-      <Offcanvas show={showOffcanvas} onHide={handleClose} placement="end">
+      <Offcanvas show={showOffcanvas} onHide={handleClose} placement="end" style={{zIndex:"1041"}}>
         <Offcanvas.Header closeButton>
           <Offcanvas.Title>{isEdit ? 'Edit' : 'Tambah'} Suvenir</Offcanvas.Title>
         </Offcanvas.Header>

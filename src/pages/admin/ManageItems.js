@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ref, set, remove, update, push, onValue } from 'firebase/database';
-import { Row, Col, Button, ButtonGroup, Form, Offcanvas, Card, Badge } from 'react-bootstrap';
+import { Row, Col, Button, ButtonGroup, Form, Offcanvas, Card, Badge, Spinner } from 'react-bootstrap';
 import { db } from '../../utils/firebaseConfig';
 import axios from 'axios'; // For HTTP requests to Cloudinary
 
@@ -26,6 +26,7 @@ const ManageItems = () => {
   });
   const [imagePreviews, setImagePreviews] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
+  const [isLoading, setLoading] = useState(false);
 
   function formatRupiah(number) {
     return number.toLocaleString('id-ID');
@@ -96,35 +97,43 @@ const ManageItems = () => {
 
   const handleAddItem = async () => {
     if (!newItem.name.trim()) return;
-  
-    // Upload images and get URLs
-    const imageUrls = await Promise.all(
-      newItem.images.map(file => uploadImageToCloudinary(file))
-    );
-  
-    const itemsRef = ref(db, 'items');
-    const newItemRef = push(itemsRef);
-    const newItemWithTimestamp = {
-      ...newItem,
-      images: imageUrls,
-      createdAt: new Date().toISOString() // Add current timestamp
-    };
-  
-    await set(newItemRef, newItemWithTimestamp);
-  
-    setNewItem({
-      name: '',
-      price: '',
-      description: '',
-      tiktokLink: '',
-      shopeeLink: '',
-      category: '',
-      brand: '',
-      gender: '',
-      images: []
-    });
-    setImagePreviews([]);
-    setShowAddModal(false);
+    
+    setLoading(true);
+    
+    try {
+      // Upload images and get URLs
+      const imageUrls = await Promise.all(
+        newItem.images.map(file => uploadImageToCloudinary(file))
+      );
+    
+      const itemsRef = ref(db, 'items');
+      const newItemRef = push(itemsRef);
+      const newItemWithTimestamp = {
+        ...newItem,
+        images: imageUrls,
+        createdAt: new Date().toISOString() // Add current timestamp
+      };
+    
+      await set(newItemRef, newItemWithTimestamp);
+    
+      setNewItem({
+        name: '',
+        price: '',
+        description: '',
+        tiktokLink: '',
+        shopeeLink: '',
+        category: '',
+        brand: '',
+        gender: '',
+        images: []
+      });
+    } catch (error) {
+      alert('Error adding item:', error);
+    } finally {
+      setImagePreviews([]);
+      setShowAddModal(false);
+      setLoading(false);
+    }    
   };
   
 
@@ -188,10 +197,23 @@ const ManageItems = () => {
 
   return (
     <div className="container mt-4 admin-page">
+      <div className={`${isLoading ? 'd-flex' : 'd-none'} justify-content-center align-items-center`}
+        style={{
+          position:"absolute",
+          top:"0",
+          right:"0",
+          width:"100vw",
+          height:"100vh",
+          backgroundColor:"#00000054",
+          zIndex:"1042"
+        }}
+      >
+        <Spinner animation="border" />
+      </div>
+
+
       <h1>Manage Product</h1>
-
       <Button variant="primary" onClick={() => setShowAddModal(true)}>Add Product</Button>
-
       {/* <Table striped bordered hover className="mt-4">
         <thead>
           <tr>

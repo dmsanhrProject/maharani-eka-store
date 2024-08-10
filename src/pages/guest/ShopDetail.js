@@ -43,7 +43,7 @@ const ShopDetail = () => {
   }
 
   function generateWhatsAppURL() {
-    const message = `🌟Halo Maharani Eka🌟 
+    const message = `🛍 Halo Maharani Eka! 🛍 
 Saya tertarik dengan produk
 
 _*${brandName}*_
@@ -55,7 +55,7 @@ Bisa tolong berikan informasi lebih lanjut mengenai
 - serta promo / diskon 
 
 Terima kasih banyak! 🙏😊`;
-    return `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(message)}`;
+    return `https://api.whatsapp.com/send?phone=${WA_NUMBER}&text=${encodeURIComponent(message)}`;
   }
 
   if (loading) {

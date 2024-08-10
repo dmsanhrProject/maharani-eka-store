@@ -21,7 +21,7 @@ Bagaimana sistem komisi dan pengiriman produk?
 Adakah dukungan atau pelatihan yang disediakan untuk reseller baru?
 
 Terima kasih banyak! 🙏😊`;
-    return `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(message)}`;
+    return `https://api.whatsapp.com/send?phone=${WA_NUMBER}&text=${encodeURIComponent(message)}`;
   }
 
   return (
@@ -94,7 +94,9 @@ Terima kasih banyak! 🙏😊`;
                   <li>Syarat dan ketentuan ini dapat berubah sewaktu-waktu tanpa pemberitahuan sebelumnya. Reseller diharapkan untuk selalu mengikuti update terbaru.</li>
                 </ul>
                 <div className='d-flex justify-content-center'>
-                  <button onClick={generateWhatsAppURL} className="btn btn-outline-red-ts rounded-0 hero-button text-red py-3 px-4 mt-3">
+                  <button className="btn btn-outline-red-ts rounded-0 hero-button text-red py-3 px-4 mt-3"
+                      as="a" href={generateWhatsAppURL()} target="_blank"
+                  >
                     Bergabunglah Bersama Kami <i className="ms-3 d-none d-sm-inline bi bi-arrow-right"></i>
                   </button>
                 </div>

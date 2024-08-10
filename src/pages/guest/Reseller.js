@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Container, Row, Col, Card } from 'react-bootstrap';
+import { Container, Row, Col, Card, Button } from 'react-bootstrap';
 import Footer from '../../components/Footer';
 import { WA_NUMBER } from '../../utils/VarGlobe';
 
@@ -94,11 +94,11 @@ Terima kasih banyak! 🙏😊`;
                   <li>Syarat dan ketentuan ini dapat berubah sewaktu-waktu tanpa pemberitahuan sebelumnya. Reseller diharapkan untuk selalu mengikuti update terbaru.</li>
                 </ul>
                 <div className='d-flex justify-content-center'>
-                  <button className="btn btn-outline-red-ts rounded-0 hero-button text-red py-3 px-4 mt-3"
+                  <Button className="btn btn-outline-red-ts rounded-0 hero-button text-red py-3 px-4 mt-3"
                       as="a" href={generateWhatsAppURL()} target="_blank"
                   >
                     Bergabunglah Bersama Kami <i className="ms-3 d-none d-sm-inline bi bi-arrow-right"></i>
-                  </button>
+                  </Button>
                 </div>
               </Card.Body>
             </Card>

@@ -9,7 +9,7 @@ function generateWhatsAppURL(product) {
   const message = `💎 Halo Maharani Eka! 💎
 
 Saya tertarik dengan 
-*suvenir custom ${product}* 
+*Suvenir Kustom ${product}* 
 
 Bisa tolong berikan informasi detail lebih lanjut?
 Terima kasih banyak! 🙏😊`;
@@ -46,17 +46,18 @@ const Souvenir = () => {
         <Row className="mt-3 mt-md-5">
             {souvenirs.map(souvenir => ( 
                 <Col key={souvenir.id} sm={4} md={4} className='col-6'>
-                    <Card style={{
-                        aspectRatio:"1",
-                        width:"100%",
-                        height:"auto",
-                        backgroundImage: `url(${souvenir.image})`,
-                        backgroundSize: 'cover',
-                        backgroundPosition: 'center',
-                    }}>
-                        <Card.Body>
-                            <Card.Title>{souvenir.name}</Card.Title>
-                            <Card.Text>{souvenir.description}</Card.Text>
+                    <Card className='border-0'
+                        style={{
+                            aspectRatio:"1",
+                            width:"100%",
+                            height:"auto",
+                            backgroundImage: `url(${souvenir.image})`,
+                            backgroundSize: 'cover',
+                            backgroundPosition: 'center',
+                        }}
+                    >
+                        <Card.Body className='d-flex flex-column justify-content-center align-items-center' style={{backgroundColor:"#00000073"}}>
+                            <Card.Title className='text-white'>{souvenir.name}</Card.Title>
                             <Button className="btn btn-red rounded-0 hero-button text-white py-2 px-3"
                                 as="a" href={generateWhatsAppURL(souvenir.name)} target="_blank"
                             >Hubungi Kami !</Button>

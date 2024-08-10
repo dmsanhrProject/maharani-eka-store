@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ref, set, remove, update, push, onValue } from 'firebase/database';
-import { Row, Col, Button, ButtonGroup, Table, Form, Offcanvas, Card, Badge } from 'react-bootstrap';
+import { Row, Col, Button, ButtonGroup, Form, Offcanvas, Card, Badge } from 'react-bootstrap';
 import { db } from '../../utils/firebaseConfig';
 import axios from 'axios'; // For HTTP requests to Cloudinary
 

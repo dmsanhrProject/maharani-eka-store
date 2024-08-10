@@ -59,6 +59,7 @@ const Nav4 = () => {
                 <Nav className="ms-auto mb-2 mb-lg-0 bottom-nav1">
                     <Nav.Link as={Link} className="text-red" to="/">Home</Nav.Link>
                     <Nav.Link as={Link} className="text-red" to="/shop">Shop</Nav.Link>
+                    <Nav.Link as={Link} className="text-red" to="/souvenir">Souvenir</Nav.Link>
                     <Nav.Link as={Link} className="text-red" to="/reseller">Reseller</Nav.Link>
                     <Nav.Link as={Link} className="text-red" to="/contact">Contact</Nav.Link>
                 </Nav>
@@ -90,6 +91,7 @@ const Nav4 = () => {
                 <Nav className="mb-2 mb-lg-0 flex-column border-top">
                     <Nav.Link as={Link} to="/" className='py-4 border-bottom text-dark' style={{fontSize:"30px"}} onClick={handleClose}>Home</Nav.Link>
                     <Nav.Link as={Link} to="/shop" className='py-4 border-bottom text-dark' style={{fontSize:"30px"}} onClick={handleClose}>Shop</Nav.Link>
+                    <Nav.Link as={Link} to="/souvenir" className='py-4 border-bottom text-dark' style={{fontSize:"30px"}} onClick={handleClose}>Souvenir</Nav.Link>
                     <Nav.Link as={Link} to="/reseller" className='py-4 border-bottom text-dark' style={{fontSize:"30px"}} onClick={handleClose}>Reseller</Nav.Link>
                     <Nav.Link as={Link} to="/contact" className='py-4 border-bottom text-dark' style={{fontSize:"30px"}} onClick={handleClose}>Contact</Nav.Link>
                 </Nav>

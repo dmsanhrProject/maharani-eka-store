@@ -10,26 +10,25 @@ const Login = () => {
   const { setIsAuthenticated } = useAuth();
 
   // 123
-  const encryptedPassword = 'U2FsdGVkX1+359QcjSx28xybmS2iHNDsboEQpI0C1Mc=';
+  // const encryptedPassword = 'U2FsdGVkX1+359QcjSx28xybmS2iHNDsboEQpI0C1Mc=';
 
-  // AdminMHS#5678
-  // const encryptedPassword = 'U2FsdGVkX1/ndNr5+XMzkUpgpMJbsyHlufhQUwcgHpE=';
-  const secretKey = process.env.REACT_APP_SECRET_KEY;
+  //pass
+  const encryptedPassword = "U2FsdGVkX1+V7O8ANZYrcbdCP1Lansoyjr2KIwC/3OQ=";
 
   const handleLogin = (e) => {
     e.preventDefault();
-    const decryptedPassword = CryptoJS.AES.decrypt(encryptedPassword, secretKey).toString(CryptoJS.enc.Utf8);
+    const decryptedPassword = CryptoJS.AES.decrypt(encryptedPassword, process.env.REACT_APP_SECRET_KEY).toString(CryptoJS.enc.Utf8);
 
     if (password === decryptedPassword) {
       setIsAuthenticated(true);
-      navigate('/admin');
+      navigate(`/${process.env.REACT_APP_ADMIN_URL}`);
     } else {
       alert('Password salah');
-      const ssk = secretKey;
-      const pass = '123';
+      // const ssk = secretKey;
+      // const pass = '123';
       
-      const encPass = CryptoJS.AES.encrypt(pass, ssk).toString();
-      console.log('Encrypted Password:', encPass);
+      // const encPass = CryptoJS.AES.encrypt(pass, ssk).toString();
+      // console.log('Encrypted Password:', encPass);
     }
   };
 

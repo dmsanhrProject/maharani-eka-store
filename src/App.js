@@ -14,6 +14,7 @@ import ManageBrands from './pages/admin/ManageBrands';
 import ManageItems from './pages/admin/ManageItems';
 import ManageSouvenir from './pages/admin/ManageSouvenir';
 import Login from './pages/Login';
+import NotFoundPage from './pages/NotFound';
 import ScrollToTop from './components/ScrollToTop';
 import ProtectedRoute from './utils/ProtectedRoute';
 import { AuthProvider } from './utils/AuthContext';
@@ -84,6 +85,7 @@ const App = () => {
                 </ProtectedRoute>
               }
             />
+            <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </Layout>
       </Router>

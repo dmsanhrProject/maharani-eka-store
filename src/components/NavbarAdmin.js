@@ -1,10 +1,22 @@
 import React from 'react';
+import { getAuth, signOut } from 'firebase/auth';
+import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
-import Container from 'react-bootstrap/Container';
-import Nav from 'react-bootstrap/Nav';
-import Navbar from 'react-bootstrap/Navbar';
+import { Button, Container, Nav, Navbar } from "react-bootstrap";
 
 function NavbarAdmin() {
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    const auth = getAuth();
+    try {
+      await signOut(auth);
+      navigate('/login');
+    } catch (error) {
+      console.error("Logout Error:", error.message);
+    }
+  };
+
   return (
     <Navbar expand="md" className="bg-body-tertiary admin-navs">
       <Container>
@@ -18,6 +30,7 @@ function NavbarAdmin() {
             <Link className='a-navlink me-3 mb-2 mb-md-0' to="/resty/manage-items">Produk</Link>
             <Link className='a-navlink me-3 mb-2 mb-md-0' to="/resty/manage-souvenir">Souvenir</Link>
           </Nav>
+            <Button variant='danger' size='sm' className='ms-auto mb-2 mb-md-0' onClick={handleLogout}>Log Out</Button>
         </Navbar.Collapse>
       </Container>
     </Navbar>

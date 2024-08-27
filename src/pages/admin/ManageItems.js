@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { ref, set, remove, update, push, onValue } from 'firebase/database';
 import { Row, Col, Button, ButtonGroup, Form, Offcanvas, Card, Badge, Spinner } from 'react-bootstrap';
 import { db } from '../../utils/firebaseConfig';
-import axios from 'axios'; // For HTTP requests to Cloudinary
+import axios from 'axios';
 
 const ManageItems = () => {
   const [items, setItems] = useState([]);
@@ -16,6 +16,7 @@ const ManageItems = () => {
   const [newItem, setNewItem] = useState({
     name: '',
     price: '',
+    discount: 0,
     description: '',
     tiktokLink: '',
     shopeeLink: '',
@@ -81,14 +82,14 @@ const ManageItems = () => {
   }, [db]);
 
   const uploadImageToCloudinary = async (file) => {
-    const url = 'https://api.cloudinary.com/v1_1/drhujpp7h/image/upload'; // Replace with your Cloudinary URL
+    const url = 'https://api.cloudinary.com/v1_1/drhujpp7h/image/upload';
     const formData = new FormData();
     formData.append('file', file);
-    formData.append('upload_preset', 'cngs0yzd'); // Replace with your upload preset
+    formData.append('upload_preset', 'cngs0yzd');
 
     try {
       const response = await axios.post(url, formData);
-      return response.data.secure_url; // URL of the uploaded image
+      return response.data.secure_url;
     } catch (error) {
       console.error('Error uploading image:', error);
       return null;
@@ -119,6 +120,7 @@ const ManageItems = () => {
       setNewItem({
         name: '',
         price: '',
+        discount: '',
         description: '',
         tiktokLink: '',
         shopeeLink: '',
@@ -214,39 +216,6 @@ const ManageItems = () => {
 
       <h1>Manage Product</h1>
       <Button variant="primary" onClick={() => setShowAddModal(true)}>Add Product</Button>
-      {/* <Table striped bordered hover className="mt-4">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Price</th>
-            <th>Category</th>
-            <th>Brand</th>
-            <th>Gender</th>
-            <th>Link</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {items.map(item => (
-            <tr key={item.id}>
-              <td>{item.name}</td>
-              <td>Rp.{formatRupiah(parseInt(item.price))}</td>
-              <td>{categories.find(cat => cat.id === item.category)?.name || 'N/A'}</td>
-              <td>{brands.find(brand => brand.id === item.brand)?.name || 'N/A'}</td>
-              <td>{item.gender || 'N/A'}</td>
-              <td>
-                <a href={item.tiktokLink} target="_blank" rel="noopener noreferrer" className='btn btn-sm btn-dark mx-1'>TikTok</a>
-                <a href={item.shopeeLink} target="_blank" rel="noopener noreferrer" className='btn btn-sm btn-warning mx-1 text-white' style={{backgroundColor:'#ff8100'}}>Shopee</a>
-              </td>
-              <td>
-                <Button variant="info" size="sm" onClick={() => handleShowDetail(item)}>Detail</Button>
-                <Button variant="warning" size="sm" className="ms-2" onClick={() => startEditItem(item)}>Edit</Button>
-                <Button variant="danger" size="sm" className="ms-2" onClick={() => handleDeleteItem(item.id)}>Delete</Button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </Table> */}
       <Row className="mt-4">
         <Col className='col-12'>
           <Form className="mb-4">
@@ -266,9 +235,20 @@ const ManageItems = () => {
               style={{ cursor: 'pointer',overflow:'hidden'}} 
               onClick={() => handleShowDetail(item)}
             >
-              <Badge bg={item.gender === 'Wanita' ? 'pink' : 'primary'} className='rounded-1' style={{marginBottom:"-21px",zIndex:'99',width:"fit-content"}}>
+              <div className='w-100 d-flex justify-content-between align-items-start' style={{marginBottom:"-21px",zIndex:'99'}}>
+                <Badge bg={item.gender === 'Wanita' ? 'pink' : 'primary'} className='rounded-1' style={{width:"fit-content"}}>
+                  {item.gender === 'Wanita' ? 'W' : 'P'}
+                </Badge>
+                <Badge bg='discount' className={item.discount === '0' || item.discount === 0 ? 'd-none' : 'd-block'} style={{backgroundColor:'#f6d3d6'}}>
+                  -
+                  {(((parseInt(item.price) - parseInt(item.discount)) / parseInt(item.price)) * 100).toFixed(0)}
+                  %
+                </Badge>
+              </div>
+              
+              {/* <Badge bg={item.gender === 'Wanita' ? 'pink' : 'primary'} className='rounded-1' style={{marginBottom:"-21px",zIndex:'99',width:"fit-content"}}>
                 {item.gender === 'Wanita' ? 'W' : 'P'}
-              </Badge>
+              </Badge> */}
               {item.images.length > 0 && (
                 <Card.Img 
                   variant="top" 
@@ -282,9 +262,12 @@ const ManageItems = () => {
                   {brands.find(brand => brand.id === item.brand)?.name || 'N/A'}
                 </Card.Title>
                 <Card.Subtitle className="pb-2 text-secondary text-truncate">{item.name}</Card.Subtitle>
-                <Card.Text>
+                
+                <p className={item.discount === '0' || item.discount === 0 ? '' : 'text-red'}>Rp{item.discount === '0' || item.discount === 0 ? formatRupiah(parseInt(item.price)) : formatRupiah(parseInt(item.discount))}</p>
+                
+                {/* <Card.Text>
                   Rp.{formatRupiah(parseInt(item.price))}
-                </Card.Text>
+                </Card.Text> */}
                 <ButtonGroup size="sm" className='w-100' style={{zIndex:'99'}}>
                   <Button variant="outline-warning" onClick={(e) => {e.stopPropagation(); startEditItem(item)}}>edit</Button>
                   <Button variant="outline-danger" onClick={(e) => { e.stopPropagation(); handleDeleteItem(item.id); }}>hapus</Button>
@@ -303,7 +286,7 @@ const ManageItems = () => {
         <Offcanvas.Body>
           <Form>
             <Form.Group controlId="formItemName">
-              <Form.Label className="mb-0 mt-2">Name</Form.Label>
+              <Form.Label className="mb-0 mt-2">Nama Produk</Form.Label>
               <Form.Control size="sm"
                 type="text"
                 value={newItem.name}
@@ -312,7 +295,7 @@ const ManageItems = () => {
               />
             </Form.Group>
             <Form.Group controlId="formItemPrice">
-              <Form.Label className="mb-0 mt-2">Price</Form.Label>
+              <Form.Label className="mb-0 mt-2">Harga</Form.Label>
               <Form.Control size="sm"
                 type="number"
                 value={newItem.price}
@@ -320,8 +303,18 @@ const ManageItems = () => {
                 placeholder="Enter item price"
               />
             </Form.Group>
+            <Form.Group controlId="formItemDiscount">
+              <Form.Label className="mb-0 mt-2 text-danger">Harga Diskon</Form.Label>
+              <Form.Control size="sm" className='border-danger'
+                type="number"
+                value={newItem.discount}
+                onChange={(e) => setNewItem(prev => ({ ...prev, discount: e.target.value }))}
+                placeholder="Enter item discount price"
+              />
+              <small>Tulis <span className='text-danger'>0</span> jika tidak ada diskon</small>
+            </Form.Group>
             <Form.Group controlId="formItemDescription">
-              <Form.Label className="mb-0 mt-2">Description</Form.Label>
+              <Form.Label className="mb-0 mt-2">Deskripsi</Form.Label>
               <Form.Control size="sm"
                 as="textarea"
                 value={newItem.description}
@@ -348,7 +341,7 @@ const ManageItems = () => {
               />
             </Form.Group>
             <Form.Group controlId="formItemCategory">
-              <Form.Label className="mb-0 mt-2">Category</Form.Label>
+              <Form.Label className="mb-0 mt-2">Ketegori</Form.Label>
               <Form.Control size="sm"
                 as="select"
                 value={newItem.category}
@@ -386,9 +379,10 @@ const ManageItems = () => {
               </Form.Control>
             </Form.Group>
             <Form.Group controlId="formItemImages">
-              <Form.Label className="mb-0 mt-2">Images</Form.Label>
+              <Form.Label className="mb-0 mt-2">Gambar</Form.Label>
               <Form.Control size="sm"
-                type="file"
+                type="file" 
+                accept="image/*"
                 multiple
                 onChange={handleImageChange}
               />
@@ -415,7 +409,7 @@ const ManageItems = () => {
         <Offcanvas.Body>
           <Form>
             <Form.Group controlId="formItemName">
-              <Form.Label>Name</Form.Label>
+              <Form.Label className="mb-0 mt-2">Nama Produk</Form.Label>
               <Form.Control size="sm"
                 type="text"
                 value={editItem?.name || ''}
@@ -424,7 +418,7 @@ const ManageItems = () => {
               />
             </Form.Group>
             <Form.Group controlId="formItemPrice">
-              <Form.Label>Price</Form.Label>
+              <Form.Label className="mb-0 mt-2">Harga</Form.Label>
               <Form.Control size="sm"
                 type="number"
                 value={editItem?.price || ''}
@@ -432,8 +426,18 @@ const ManageItems = () => {
                 placeholder="Enter item price"
               />
             </Form.Group>
+            <Form.Group controlId="formItemDiscount">
+              <Form.Label className="mb-0 mt-2 text-danger">Harga Diskon</Form.Label>
+              <Form.Control size="sm" className='border-danger'
+                type="number"
+                value={editItem?.discount || ''}
+                onChange={(e) => setEditItem(prev => ({ ...prev, discount: e.target.value }))}
+                placeholder="Enter item discount price"
+              />
+              <small>Tulis <span className='text-danger'>0</span> jika tidak ada diskon</small>
+            </Form.Group>
             <Form.Group controlId="formItemDescription">
-              <Form.Label>Description</Form.Label>
+              <Form.Label className="mb-0 mt-2">Deskripsi</Form.Label>
               <Form.Control size="sm"
                 as="textarea"
                 value={editItem?.description || ''}
@@ -442,7 +446,7 @@ const ManageItems = () => {
               />
             </Form.Group>
             <Form.Group controlId="formItemTiktokLink">
-              <Form.Label>TikTok Link</Form.Label>
+              <Form.Label className="mb-0 mt-2">TikTok Link</Form.Label>
               <Form.Control size="sm"
                 type="text"
                 value={editItem?.tiktokLink || ''}
@@ -451,7 +455,7 @@ const ManageItems = () => {
               />
             </Form.Group>
             <Form.Group controlId="formItemShopeeLink">
-              <Form.Label>Shopee Link</Form.Label>
+              <Form.Label className="mb-0 mt-2">Shopee Link</Form.Label>
               <Form.Control size="sm"
                 type="text"
                 value={editItem?.shopeeLink || ''}
@@ -460,7 +464,7 @@ const ManageItems = () => {
               />
             </Form.Group>
             <Form.Group controlId="formItemCategory">
-              <Form.Label>Category</Form.Label>
+              <Form.Label className="mb-0 mt-2">Kategori</Form.Label>
               <Form.Control size="sm"
                 as="select"
                 value={editItem?.category || ''}
@@ -473,7 +477,7 @@ const ManageItems = () => {
               </Form.Control>
             </Form.Group>
             <Form.Group controlId="formItemBrand">
-              <Form.Label>Brand</Form.Label>
+              <Form.Label className="mb-0 mt-2">Brand</Form.Label>
               <Form.Control size="sm"
                 as="select"
                 value={editItem?.brand || ''}
@@ -486,7 +490,7 @@ const ManageItems = () => {
               </Form.Control>
             </Form.Group>
             <Form.Group controlId="formItemGender">
-              <Form.Label>Gender</Form.Label>
+              <Form.Label className="mb-0 mt-2">Gender</Form.Label>
               <Form.Control size="sm"
                 as="select"
                 value={editItem?.gender || ''}
@@ -498,7 +502,7 @@ const ManageItems = () => {
               </Form.Control>
             </Form.Group>
             <Form.Group controlId="formItemImages">
-              <Form.Label>Images</Form.Label>
+              <Form.Label className="mb-0 mt-2">Gambar</Form.Label>
               <Form.Control size="sm"
                 type="file"
                 multiple
@@ -535,7 +539,12 @@ const ManageItems = () => {
                 <td>Rp.{formatRupiah(parseInt(viewItem.price))}</td>
               </tr>
               <tr>
-                <td>Description</td>
+                <td>Harga Diskon</td>
+                <td>:</td>
+                <td>Rp.{formatRupiah(parseInt(viewItem.discount))}</td>
+              </tr>
+              <tr>
+                <td>Deskripsi</td>
                 <td>:</td>
                 <td>{viewItem.description}</td>
               </tr>
@@ -550,7 +559,7 @@ const ManageItems = () => {
                 <td><a href={viewItem.shopeeLink} target="_blank" rel="noopener noreferrer">{viewItem.shopeeLink}</a></td>
               </tr>
               <tr>
-                <td>Category</td>
+                <td>kategori</td>
                 <td>:</td>
                 <td>{categories.find(cat => cat.id === viewItem.category)?.name || 'N/A'}</td>
               </tr>
@@ -565,7 +574,7 @@ const ManageItems = () => {
                 <td>{viewItem.gender || 'N/A'}</td>
               </tr>
               <tr>
-                <td>Created At</td>
+                <td>Dibuat pada</td>
                 <td>:</td>
                 <td>{new Date(viewItem.createdAt).toLocaleString()}</td>
               </tr>
@@ -588,3 +597,4 @@ const ManageItems = () => {
 };
 
 export default ManageItems;
+

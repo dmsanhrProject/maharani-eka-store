@@ -9,3 +9,9 @@
 .admin-canvas-detail-items {
     width: 40vw!important;
 }
+
+@media only screen and (max-width: 500px) {
+    .offcanvas{
+        width: 100vw!important;
+    }
+}

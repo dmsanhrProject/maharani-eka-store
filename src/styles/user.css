@@ -1,3 +1,11 @@
+.text-grey{
+    color: #aab4c8;
+}
+
+.cursor-pointer{
+    cursor: pointer;
+}
+
 .btn-red, .btn-red:active{
     background-color: #f52133;
     border-color: #f52133;
@@ -217,6 +225,60 @@ footer a{
 footer a:hover{
     text-decoration: none;
     color: #FFC600;
+}
+
+.image-gallery-icon {
+    filter: drop-shadow(0 1px 1px #616161)!important;
+}
+
+.image-gallery-icon:hover{
+    color: #f52133!important;
+}
+
+.image-gallery-left-nav .image-gallery-svg, 
+.image-gallery-right-nav .image-gallery-svg{
+    height: 2vw!important;
+}
+
+.image-gallery-thumbnail.active, 
+.image-gallery-thumbnail:focus, 
+.image-gallery-thumbnail:hover{
+    border: 1px solid #f52133!important;
+}
+
+.text-strip-discount{
+    text-decoration: line-through ;
+}
+
+.badge.bg-discount{
+    background-color: #f521332b;
+    color: #f52133;
+    padding: 4px 4px 4px 6px;
+    border-radius: 4px;
+}
+
+.image-product-col .image-gallery,
+.image-product-col .image-single{
+    position: sticky;
+    top: 117px;
+}
+
+.image-product-col.one-image .image-gallery,
+.image-product-col.multi-image .image-single{
+    display: none;
+}
+
+.image-product-col.one-image .image-single,
+.image-product-col.multi-image .image-gallery{
+    display: block;
+}
+
+.truncated-desc {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 @media screen and (min-width: 768px){

@@ -1,10 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useParams } from 'react-router-dom';
-import { Container, Row, Col, Image, Spinner } from 'react-bootstrap';
+import { Container, Row, Col, Image, Spinner, Badge } from 'react-bootstrap';
 import { ref, get } from "firebase/database";
 import { db } from '../../utils/firebaseConfig';
 import Footer from '../../components/Footer';
 import { WA_NUMBER } from '../../utils/VarGlobe';
+
+import ImageGallery from 'react-image-gallery';
+import 'react-image-gallery/styles/css/image-gallery.css';
 
 const ShopDetail = () => {
   const { id } = useParams();
@@ -12,7 +15,15 @@ const ShopDetail = () => {
   const [brandName, setBrandName] = useState('');
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [isTruncated, setIsTruncated] = useState(false);
+  const textRef = useRef(null);
+
+  const toggleShowMore = () => {
+    setIsExpanded(!isExpanded);
+  };
+
+  useEffect(() => { 
     const itemRef = ref(db, `items/${id}`);
 
     get(itemRef).then((snapshot) => {
@@ -37,6 +48,27 @@ const ShopDetail = () => {
       setLoading(false);
     });
   }, [id]);
+
+  useEffect(() => {
+    const checkTruncation = () => {
+      const element = textRef.current;
+      if (element) {
+        // Mendapatkan line-height dan menghitung tinggi maksimum untuk 3 baris
+        const lineHeight = parseInt(window.getComputedStyle(element).lineHeight, 10);
+        const maxHeight = lineHeight * 3;
+
+        if (element.scrollHeight > maxHeight) {
+          setIsTruncated(true);
+        } else {
+          setIsTruncated(false);
+        }
+      }
+    };
+
+    if (!loading && item) {
+      checkTruncation();
+    }
+  }, [item, loading]);
 
   function formatRupiah(number) {
     return number.toLocaleString('id-ID');
@@ -66,19 +98,44 @@ Terima kasih banyak! 🙏😊`;
     return <p>Item tidak ditemukan</p>;
   }
 
+  const images = item.images.map(imageUrl => ({
+    original: imageUrl,
+    thumbnail: imageUrl,
+  }));
+  
   return (
     <div>
-      <Container style={{minHeight:"calc(100vh - 120px)"}}>
+      <Container style={{minHeight:"calc(100vh - 120px)"}} className='pt-2 pt-sm-3'>
         <Row>
-          <Col sm={6}>
-            <Image src={item.images[0]} fluid />
+          <Col sm={6} className={`image-product-col ${item.images.length > 1 ? `multi-image` : `one-image`}`}>
+            <Image src={item.images[0]} fluid className='image-single' />
+            <ImageGallery
+              items={images} 
+              infinite={false} 
+              showFullscreenButton={false}
+              showPlayButton={false}
+            />
           </Col>
           <Col sm={6}>
             <div className='p-1 p-md-5'>
               <h3>{brandName}</h3>
               <h2 className='fw-normal'>{item.name}</h2>
-              <h3 className='text-red'>Rp{formatRupiah( parseInt(item.price))}</h3>
-              <p style={{fontSize:"18px"}}>{item.description}</p>
+              
+              <h3 className='text-red'>Rp{item.discount === '0' || item.discount === 0 ? formatRupiah(parseInt(item.price)) : formatRupiah(parseInt(item.discount))}</h3>
+              <h6 className={`text-strip-discount text-grey fw-normal ${item.discount === '0' || item.discount === 0 ? `d-none` : `d-block`}`}>
+                <Badge bg='discount' className='me-1'>{(((parseInt(item.price) - parseInt(item.discount)) / parseInt(item.price)) * 100).toFixed(0)}%</Badge>
+                Rp{formatRupiah(parseInt(item.price))}
+              </h6>
+              
+              <p ref={textRef} className={isExpanded ? 'mb-1' : 'truncated-desc mb-1'} style={{fontSize:"16px", lineHeight:"20px", whiteSpace:"pre-line"}}>
+                {item.description}
+              </p>
+              {isTruncated && (
+                <h6 onClick={toggleShowMore} className='cursor-pointer text-red fw-bold' style={{fontSize:'16px'}}>
+                  {isExpanded ? 'Lihat Lebih Sedikit' : 'Lihat Selengkapnya'}
+                </h6>
+              )}
+
               <hr/>
               <a href={item.shopeeLink} target="_blank" rel="noopener noreferrer" className='w-100 mb-3 btn btn-shopee rounded-1'>
                 <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="24" height="24" viewBox="0 0 50 50" style={{marginTop:'-8px',fill:"white",marginRight:"4px"}}>
